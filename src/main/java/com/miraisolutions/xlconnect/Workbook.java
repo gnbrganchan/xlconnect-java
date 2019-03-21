@@ -647,12 +647,12 @@ public final class Workbook extends Common {
     }
 
     public DataFrame readNamedRegion(String name, boolean header) {
-        return readNamedRegion(name, header, ReadStrategy.DEFAULT, null, false, "", false, null);
+        return readNamedRegion(null, name, header, ReadStrategy.DEFAULT, null, false, "", false, null);
     }
 
-    public DataFrame readNamedRegion(String name, boolean header, ReadStrategy readStrategy, DataType[] colTypes, 
+    public DataFrame readNamedRegion(String worksheetName, String name, boolean header, ReadStrategy readStrategy, DataType[] colTypes,
             boolean forceConversion, String dateTimeFormat, boolean takeCached, int[] subset) {
-        Name cname = getName(name);
+        Name cname = worksheetName == null ? getName(name) : getNameForWorksheet(worksheetName, name);
         checkName(cname);
 
         // Get sheet where name is defined in
@@ -994,6 +994,22 @@ public final class Workbook extends Common {
             return cname;
         else
             throw new IllegalArgumentException("Name '" + name + "' does not exist!");
+    }
+
+    List<Name> getNames(String name) {
+        List names = workbook.getNames(name);
+        List<Name> cNames = new ArrayList<Name>();
+        for(Object n : names)
+            cNames.add((Name)n);
+        return cNames;
+    }
+
+    private Name getNameForWorksheet(String worksheetName, String name) {
+        List<Name> cNames = getNames(name);
+        for (Name n : cNames)
+            if (n.getSheetName().equals(worksheetName))
+                return n;
+        throw new IllegalArgumentException("Name '" + name + "' does not exist in worksheet '" + worksheetName + "'!");
     }
 
     // Checks only if the reference as such is valid
