@@ -108,8 +108,8 @@ public final class RWorkbookWrapper {
         workbook.cloneSheet(name, newName);
     }
 
-    public void writeNamedRegion(RDataFrameWrapper dataFrame, String name, boolean header) {
-        workbook.writeNamedRegion(dataFrame.dataFrame, name, header);
+    public void writeNamedRegion(RDataFrameWrapper dataFrame, String name, boolean header, String worksheetName) {
+        workbook.writeNamedRegion(dataFrame.dataFrame, name, header, worksheetName);
     }
 
     private static DataType[] dataTypeFromString(String[] colTypes) {

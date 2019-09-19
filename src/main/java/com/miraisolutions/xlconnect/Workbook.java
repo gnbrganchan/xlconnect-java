@@ -620,8 +620,8 @@ public final class Workbook extends Common {
         this.onErrorCell = eb;
     }
 
-    public void writeNamedRegion(DataFrame data, String name, boolean header) {
-        Name cname = getName(name);
+    public void writeNamedRegion(DataFrame data, String name, boolean header, String worksheetName) {
+        Name cname = worksheetName == null ? getName(name) : getNameForWorksheet(worksheetName, name);
         checkName(cname);
 
         // Get sheet where name is defined in
