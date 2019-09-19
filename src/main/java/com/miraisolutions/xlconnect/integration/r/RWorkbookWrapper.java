@@ -72,8 +72,8 @@ public final class RWorkbookWrapper {
         workbook.createSheet(name);
     }
 
-    public void createName(String name, String formula, boolean overwrite) {
-        workbook.createName(name, formula, overwrite);
+    public void createName(String name, String worksheetName, String formula, boolean overwrite) {
+        workbook.createName(name, worksheetName, formula, overwrite);
     }
 
     public void removeName(String name) {
@@ -144,8 +144,8 @@ public final class RWorkbookWrapper {
         return new RDataFrameWrapper(dataFrame);
     }
 
-    public boolean existsName(String name) {
-        return workbook.existsName(name);
+    public boolean existsName(String name, String worksheetName) {
+        return workbook.existsName(name, worksheetName);
     }
 
     public boolean existsSheet(String name) {
@@ -487,8 +487,8 @@ public final class RWorkbookWrapper {
     }
 
 
-    public void appendNamedRegion(RDataFrameWrapper data, String name, boolean header) {
-        workbook.appendNamedRegion(data.dataFrame, name, header);
+    public void appendNamedRegion(RDataFrameWrapper data, String name, String worksheetName, boolean header) {
+        workbook.appendNamedRegion(data.dataFrame, name, worksheetName, header);
     }
 
     public void appendWorksheet(RDataFrameWrapper data, int worksheetIndex, boolean header) {
