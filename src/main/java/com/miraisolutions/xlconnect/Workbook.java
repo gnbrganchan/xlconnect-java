@@ -290,10 +290,7 @@ public final class Workbook extends Common {
 
     public boolean existsName(String name, String worksheetName) {
         try {
-            if(worksheetName == null)
-                getName(name);
-            else
-                getNameForWorksheet(worksheetName, name);
+            getNameForWorksheet(worksheetName, name);
             return true;
         }
         catch (IllegalArgumentException ignored) {
@@ -364,6 +361,8 @@ public final class Workbook extends Common {
     }
 
     public void removeName(String name) {
+        if (name == null)
+                return;
         Name cname = workbook.getName(name);
         if(cname != null)
             workbook.removeName(cname);
@@ -379,7 +378,7 @@ public final class Workbook extends Common {
     }
 
     public int[] getReferenceCoordinatesForName(String worksheetName, String name) {
-        Name cname = worksheetName == null ? getName(name) : getNameForWorksheet(worksheetName, name);
+        Name cname = getNameForWorksheet(worksheetName, name);
         AreaReference aref = new AreaReference(cname.getRefersToFormula(), workbook.getSpreadsheetVersion());
         // Get upper left corner
         CellReference first = aref.getFirstCell();
@@ -631,7 +630,7 @@ public final class Workbook extends Common {
     }
 
     public void writeNamedRegion(DataFrame data, String name, boolean header, String worksheetName) {
-        Name cname = worksheetName == null ? getName(name) : getNameForWorksheet(worksheetName, name);
+        Name cname = getNameForWorksheet(worksheetName, name);
         checkName(cname);
 
         // Get sheet where name is defined in
@@ -663,7 +662,7 @@ public final class Workbook extends Common {
 
     public DataFrame readNamedRegion(String worksheetName, String name, boolean header, ReadStrategy readStrategy, DataType[] colTypes,
             boolean forceConversion, String dateTimeFormat, boolean takeCached, int[] subset) {
-        Name cname = worksheetName == null ? getName(name) : getNameForWorksheet(worksheetName, name);
+        Name cname = getNameForWorksheet(worksheetName, name);
         checkName(cname);
 
         // Get sheet where name is defined in
@@ -714,7 +713,10 @@ public final class Workbook extends Common {
     }
 
     public void writeWorksheet(DataFrame data, String worksheetName, int startRow, int startCol, boolean header) {
-        writeWorksheet(data, workbook.getSheetIndex(worksheetName), startRow, startCol, header);
+        int sheetIndex = workbook.getSheetIndex(worksheetName);
+        if(sheetIndex < 0)
+            throw new NoSuchElementException("Worksheet " + worksheetName + " was not found!");
+        writeWorksheet(data, sheetIndex, startRow, startCol, header);
     }
 
     public void writeWorksheet(DataFrame data, int worksheetIndex, boolean header) {
@@ -1012,6 +1014,8 @@ public final class Workbook extends Common {
     }
 
     private Name getNameForWorksheet(String worksheetName, String name) {
+        if (worksheetName == null)
+            return getName(name);
         List<Name> cNames = getNames(name);
         for (Name n : cNames)
             if (n.getSheetName().equals(worksheetName))
