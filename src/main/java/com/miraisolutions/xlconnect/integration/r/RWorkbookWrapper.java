@@ -162,7 +162,7 @@ public final class RWorkbookWrapper {
     }
 
     public RDataFrameWrapper readWorksheet(String worksheet, int startRow, int startCol, int endRow, int endCol, 
-            boolean header, String colTypes[], boolean forceConversion, String dateTimeFormat, boolean takeCached, 
+            boolean header, String colTypes[], boolean forceConversion, String dateTimeFormat, boolean takeCached,
             int [] subset, String readStrategy) {
         DataFrame dataFrame = workbook.readWorksheet(worksheet, startRow, startCol, endRow, endCol, header,
                 ReadStrategy.valueOf(readStrategy.toUpperCase()), dataTypeFromString(colTypes), forceConversion, dateTimeFormat,
@@ -235,7 +235,7 @@ public final class RWorkbookWrapper {
     }
 
     public void addImage(String filename, String name, boolean originalSize)
-            throws FileNotFoundException, IOException {
+            throws IOException {
         workbook.addImage(filename, name, originalSize);
     }
 
